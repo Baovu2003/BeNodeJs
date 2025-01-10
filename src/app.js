@@ -16,7 +16,8 @@ require("./dbs/init.mongodb")
 const {checkOverloading} = require("./helpers/check.connect")
 checkOverloading()
 
-
+app.use(express.json());
+// app.use(express.urlencoded());
 
 // app.get("/", (req,res,next) =>{
 //     const strCompress = "Hello";

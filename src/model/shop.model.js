@@ -25,7 +25,7 @@ var shopSchema = new mongoose.Schema({
         default: 'inactive'
     },
     verify:{
-        type:Schema.types.Boolean,
+        type:Boolean,
         default: false
     },
     roles:{type:Array,
@@ -33,10 +33,10 @@ var shopSchema = new mongoose.Schema({
     },
 },{
     timestamps: true,
-    collation:COLLECTION_NAME
+    collection:COLLECTION_NAME
 }
 
 );
 
 //Export the model
-module.exports = mongoose.model(COLLECTION_NAME, shopSchema);   
+module.exports = mongoose.model(DOCUMENT_NAME, shopSchema);   

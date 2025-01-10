@@ -9,7 +9,7 @@ console.log({host,port,name})
 
 const connectString = `mongodb://${host}:${port}/${name}`;
 const { countConnect } = require("../helpers/check.connect");
-console.log(connectString)
+console.log("connectString",connectString)
 class Database {
   constructor() {
     this.connect(); // Gọi phương thức connect khi khởi tạo đối tượng
