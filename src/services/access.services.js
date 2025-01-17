@@ -21,10 +21,10 @@ class AccessService {
         console.log("signUp wwith: name, email,password", name, email, password);
         // try {
             // Step 1: Check if email exists in the database. Nếu email đã tồn tại, ném lỗi BadRequestError.
-            aa
+            
             const hodelShop = await shopModel.findOne({ email });
             if (hodelShop) {
-                 throw new BadRequestError('Error:Email already exists roi')
+                 throw new BadRequestError('Error:Email already exists roi nhe')
                 // return {
                 //     code: "XXXX",
                 //     message: "Email already exists",
