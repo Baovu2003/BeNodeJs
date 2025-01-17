@@ -2,6 +2,7 @@
 
 const keytokenModel = require("../model/keytoken.model");
 
+
 class KeyTokenService {
 
     static createKeyToken = async ({ userId, publicKey, privateKey }) => {
@@ -10,8 +11,10 @@ class KeyTokenService {
             const tokens = await keytokenModel.create({
                 user: userId,
                 publicKey,
-                privateKey,  // Ensure correct naming here
+                privateKey,  
             });
+
+            //Nếu tạo thành công, nó sẽ trả về publicKey
             return tokens ? tokens.publicKey : null;
         } catch (error) {
             console.error('Error creating key token:', error);

@@ -7,11 +7,11 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
     try {
         // accessToken
         const accessToken = await JWT.sign( payload, publicKey, {
-            expiresIn: '2 days'
+            expiresIn: '2 days' //Có hiệu lực trong 2 ngày
         })
 
         const refreshToken = await JWT.sign( payload, privateKey, {
-            expiresIn: '7 days'
+            expiresIn: '7 days' //Có hiệu lực trong 7 ngày
         })
 
         //
@@ -23,6 +23,7 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
                 console.log(`decode verify::`, decode)
             }
         })
+        console.log(`accessToken in authUntils.js :`, accessToken,"and refreshToken::", refreshToken)
         return { accessToken, refreshToken}
     } catch (error) {
         console.error('Error creating token pair:', error);

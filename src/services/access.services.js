@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.services");
 const { createTokenPair } = require("../auth/authUtils");
 const { getInforData } = require("../untils");
+const { BadRequestError } = require("../core/error.response");
 
 const RoleShop = {
     SHOP: "SHOP",
@@ -16,61 +17,48 @@ const RoleShop = {
 
 class AccessService {
     static signUp = async ({ name, email, password }) => {
-        console.log("signUp", name, email, password);
-        try {
-            // Step 1: Check if email exists in the database
+       
+        console.log("signUp wwith: name, email,password", name, email, password);
+        // try {
+            // Step 1: Check if email exists in the database. Nếu email đã tồn tại, ném lỗi BadRequestError.
+            aa
             const hodelShop = await shopModel.findOne({ email });
-
             if (hodelShop) {
-                return {
-                    code: "XXXX",
-                    message: "Email already exists",
-                };
+                 throw new BadRequestError('Error:Email already exists roi')
+                // return {
+                //     code: "XXXX",
+                //     message: "Email already exists",
+                // };
             }
 
-            // Step 2: Hash the password
+            // Step 2: Hash the password: Sử dụng bcrypt để băm mật khẩu của người dùng.
             const passwordHash = await bcrypt.hash(password, 10);
 
-            // Step 3: Create new shop
+            // Step 3: Create new shop và Lưu thông tin người dùng vào cơ sở dữ liệu với roles mặc định là SHOP.
             const newShop = await shopModel.create({
                 name,
                 email,
                 password: passwordHash,
                 roles: [RoleShop.SHOP],
             });
-
             console.log({ newShop });
 
+            // 
             if (newShop) {
-                
-                // Step 4: Generate RSA key pair for token signing and verification
-                // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-                //     modulusLength: 4096,
-                //     publicKeyEncoding: {
-                //         type: "pkcs1",
-                //         format: "pem",
-                //     },
-                //     privateKeyEncoding: {
-                //         type: "pkcs1",
-                //         format: "pem",
-                //     },
-                // });
+                // Step 4:Sử dụng crypto để tạo privateKey và publicKey.  
 
-                const privateKey = crypto.randomBytes(64).toString('hex');
-                const publicKey = crypto.randomBytes(64).toString('hex');
-
-
+                const privateKey = crypto.randomBytes(64).toString("hex");
+                const publicKey = crypto.randomBytes(64).toString("hex");
 
                 console.log("Generated RSA Key Pair:", { privateKey, publicKey });
 
-                // Step 5: Store public key string using KeyTokenService
+                // Step 5: Gọi KeyTokenService.createKeyToken để lưu trữ thông tin publicKey và privateKey
                 const keyStore = await KeyTokenService.createKeyToken({
                     userId: newShop._id,
                     publicKey,
-                    privateKey, // Correcting the naming to match the other usage
-                    
+                    privateKey, 
                 });
-                
+
                 console.log("Key stored:", keyStore);
                 if (!keyStore) {
                     return {
@@ -79,7 +67,7 @@ class AccessService {
                     };
                 }
 
-                // Step 6: Create token pair
+                // Step 6: Gọi createTokenPair để tạo token accessToken và refreshToken.
                 const tokens = await createTokenPair(
                     {
                         userId: newShop._id,
@@ -95,19 +83,21 @@ class AccessService {
                 return {
                     code: "201",
                     metadata: {
-                        shop: getInforData({ fileds: ['_id', 'name', 'email'], object: newShop }),  // Chú ý đã thay 'objectId' thành 'object'
+                        shop: getInforData({
+                            fileds: ["_id", "name", "email"],
+                            object: newShop,
+                        }), 
                         tokens,
                     },
                 };
-                
             }
-        } catch (error) {
-            console.error("Error during signup:", error.message);
-            return {
-                code: "ERROR",
-                message: error.message,
-            };
-        }
+        // } catch (error) {
+        //     console.error("Error during signup:", error.message);
+        //     return {
+        //         code: "ERROR",
+        //         message: error.message,
+        //     };
+        // }
     };
 }
 

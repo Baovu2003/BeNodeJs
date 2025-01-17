@@ -5,14 +5,14 @@ class AccessController {
 
     signup = async(req, res, next) => { 
         
-        try {
+        // try {
             console.log("Body:",req.body);
             return res.status(200).json(
                await AccessService.signUp(req.body)
             );
-        } catch (error) {
-         next(error);   
-        }
+        // } catch (error) {
+        //  next(error);   
+        // }
      };
 }
 
