@@ -1,5 +1,5 @@
 "use strict";
-
+const crypto = require("crypto");
 const apiKeyModel = require("../model/apiKey.model");
 
 
@@ -9,8 +9,8 @@ const apiKeyModel = require("../model/apiKey.model");
 
 const findById = async (key) => {
     try {
-        //     const newKey = await apiKeyModel.create({key:crypto.randomBytes(64).toString('hex'),permissions:['0000']});
-        //    console.log({newKey});
+            // const newKey = await apiKeyModel.create({key:crypto.randomBytes(64).toString('hex'),permissions:['0000']});
+            // console.log("Generated API Key:", newKey);
         const objectKey = await apiKeyModel.findOne({ key, status: true }).lean();
         return objectKey;
     } catch (error) {

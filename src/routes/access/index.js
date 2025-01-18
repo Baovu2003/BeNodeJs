@@ -9,6 +9,7 @@ const router = express.Router();
 //  và tự động chuyển chúng đến hàm next() 
 //  (để được xử lý bởi middleware xử lý lỗi)
 router.post('/shop/signup', asyncHandler(accessControllers.signup))
+router.post('/shop/login', asyncHandler(accessControllers.login))
 
 
 module.exports =router;
