@@ -2,6 +2,7 @@
 
 const { update } = require("lodash");
 const keytokenModel = require("../model/keytoken.model");
+const { Types } = require("mongoose");
 
 
 class KeyTokenService {
@@ -44,6 +45,45 @@ class KeyTokenService {
         }
     };
     
+
+     static findByUserId = async ({userId}) => {
+         console.log("userId in keyTokenService: " + userId);
+    const userObjectId = new Types.ObjectId(userId);
+         return await keytokenModel.findOne({user:userObjectId}).lean();
+    }
+    // static findByUserId = async ({ userId }) => {
+    //     try {
+    //         if (!Types.ObjectId.isValid(userId)) {
+    //             throw new Error("Invalid userId format");
+    //         }
+    
+    //         const userObjectId = new Types.ObjectId(userId);
+    //         const keyStore = await keytokenModel.findOne({ user: userObjectId }).lean();
+    
+    //         if (!keyStore) {
+    //             console.error("No KeyStore found for user ID:", userId);
+    //         }
+    //         return keyStore;
+    //     } catch (error) {
+    //         console.error("Error in findByUserId:", error.message);
+    //         throw new Error("Failed to retrieve KeyStore");
+    //     }
+    // };
+
+    static removeKeyById = async (userId) => {
+        return await keytokenModel.deleteOne(userId).lean();
+    }
+    static findByRefreshTokenUsed = async (refreshToken )=>{
+        return await keytokenModel.findOne({refreshTokenUsed:refreshToken}).lean()
+    }
+    static findByRefreshToken = async (refreshToken )=>{
+        return await keytokenModel.findOne(refreshToken)
+    }
+
+    static deleteKeyById = async (userId )=>{
+        return await keytokenModel.findOneAndDelete({user:userId})
+    }
+
 
 }
 

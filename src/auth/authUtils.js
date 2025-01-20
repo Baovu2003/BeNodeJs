@@ -1,6 +1,15 @@
 'use strict'
 
 const JWT = require('jsonwebtoken')
+const { asyncHandler } = require('../helpers/asyncHandler')
+const { AuthFailureError, NotFoundError } = require('../core/error.response')
+const { findByUserId } = require('../services/keyToken.services')
+
+const HEADER = {
+    API_KEY: "x-api-key",
+    CLIENT_ID: 'x-client-id',
+    AUTHORIZATION: "authorization",
+};
 
 const createTokenPair = async ( payload, publicKey, privateKey ) => {
     console.log({publicKey, privateKey})
@@ -30,6 +39,51 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
     }
 }
 
+const authentication = asyncHandler(async (req, res,next) => {
+    console.log(req.headers)
+    /*
+        1 - Check userId missing ???
+        2 - get access token
+        3 - verify token
+        4 - check user trong db co correct khong
+        5 - check keyStore with this userId
+        6 - return next
+    */
+        //1
+        const userId = req.headers[HEADER.CLIENT_ID];
+        console.log({userId})
+        if(!userId)  throw new AuthFailureError("Invalid request") ;
+
+        //2
+        const keyStore = await findByUserId({userId});
+        console.log("KeyStore ", keyStore);
+        if(!keyStore) throw new NotFoundError("Invalid request") ;
+
+        //3
+        const accessToken =  req.headers[HEADER.AUTHORIZATION];
+        console.log({accessToken})
+        if(!accessToken) throw new AuthFailureError("Invalid request") ;
+
+        //4
+        console.log("accessToken ", accessToken)
+        console.log("KeyStore Public Key:", keyStore.publicKey);
+        try {
+            const decodeUser = JWT.verify(accessToken,keyStore.publicKey);
+            console.log(`decodeUser verify::`, decodeUser)
+            if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
+            req.keyStore = keyStore;
+            return next();
+        } catch (error) {
+            throw error
+        }
+
+})
+
+
+const verifyJWT = async (token,kerSecret) => {
+    return await JWT.verify(token, kerSecret);
+}
+
 module.exports = {
-    createTokenPair
+    createTokenPair,authentication,verifyJWT
 }

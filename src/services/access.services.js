@@ -4,9 +4,13 @@ const shopModel = require("../model/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.services");
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInforData } = require("../untils");
-const { BadRequestError, AuthFailureError } = require("../core/error.response");
+const {
+  BadRequestError,
+  AuthFailureError,
+  ForbiddenError,
+} = require("../core/error.response");
 const { findByEmail } = require("./shop.services");
 
 const RoleShop = {
@@ -17,6 +21,67 @@ const RoleShop = {
 };
 
 class AccessService {
+  // 1 -  Check token da duoc su dụng hay chua.
+  static handlerRefreshToken = async (refreshToken) => {
+    const foundToken = KeyTokenService.findByRefreshTokenUsed(refreshToken);
+    if (foundToken) {
+      const { userId, email } = await verifyJWT(
+        refreshToken,
+        foundToken.privateKey
+      );
+      console.log('[1]----',{ userId, email });
+      //  Khi xac nhan dc thang nay thi he thong phat hien userId nay da bi ro ri
+      // Neu dc su dung roi thì no se xoa token trong keyStore
+
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something wrong happend!!! Please relogin");
+    }
+
+    // Neu nhu chua co thi chung ta viet 1 ham tim kiem refreshToken
+
+    const holderToken = KeyTokenService.findByRefreshToken(refreshToken);
+    if (!holderToken) throw new AuthFailureError("Shop not registered 01");
+    const { userId, email } = await verifyJWT(
+      refreshToken,
+      holderToken.privateKey
+    );
+
+    console.log('[2]----',{ userId, email });
+    const foundShop = await KeyTokenService.findByEmail(email);
+    if(!foundShop) throw new AuthFailureError("Shop not registered 02");
+    
+    // Neu nhu tim dc cap lai 1 accessToken moi dong thoi dua refreshToken nay vao da dc su dung
+
+    // create 1 cap moi
+    const tokens = await createTokenPair({userId,email,},
+      holderToken.publicKey,
+      holderToken.privateKey
+    );
+
+    // --Update token
+    await holderToken.update({
+      $set: {
+        refreshTokenUsed: tokens.refreshToken
+      
+      },
+      $addToSet: {
+          refreshTokenUsed: refreshToken
+      }
+    })
+
+    return {
+      user: {userId,email},
+      tokens
+    }
+
+  };
+
+  static logout = async (keyStore) => {
+    const dellKey = KeyTokenService.removeKeyById(keyStore);
+    console.log({ dellKey });
+    return dellKey;
+  };
+
   /*
     1 - check email in db
     2 - match password

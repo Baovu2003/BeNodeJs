@@ -4,6 +4,7 @@ const { findById } = require("../services/apiKey.services");
 
 const HEADER = {
     API_KEY: "x-api-key",
+    CLIENT_ID: 'x-client-id',
     AUTHORIZATION: "authorization",
 };
 
@@ -78,11 +79,7 @@ const permissions = (permission) => {
 // next() là một hàm trong Express dùng để chuyển điều khiển tới middleware tiếp theo, 
 // ở đây nó sẽ chuyển lỗi đến middleware xử lý lỗi của ứng dụng.
 
-const asyncHandler = fn =>{
-    return (req,res,next) => {
-        fn(req,res,next).catch(next);
-    }
-}
+
 module.exports = {
-    apiKey,permissions,asyncHandler
+    apiKey,permissions
 }
