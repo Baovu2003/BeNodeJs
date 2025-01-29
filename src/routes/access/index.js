@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 // sign up
-// Mục đích của asyncHandler là để bắt các lỗi xảy ra trong hàm signup
+// Mục đích của asyncHandler là để bắt các lỗi xảy ra trong hàm mà nó sử dụng
 //  và tự động chuyển chúng đến hàm next() 
 //  (để được xử lý bởi middleware xử lý lỗi)
 router.post('/shop/signup', asyncHandler(accessControllers.signup))

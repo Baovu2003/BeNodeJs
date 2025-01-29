@@ -6,10 +6,10 @@ const router = express.Router();
 // check apiKey:
 
 router.use(apiKey)
+// check permissions
 router.use(permissions('0000'))
 
-// check permissions
-
+// Sau khi chạy qua 2 điều kiện trên mới cho chạy vào router
 router.use('/v1/api',require("./access"))
 
 module.exports =router;

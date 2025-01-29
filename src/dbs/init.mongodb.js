@@ -28,7 +28,7 @@ class Database {
       .connect(connectString, {
         maxPoolSize: 50, // Giới hạn tối đa 50 kết nối trong connection pool
       })
-      .then((_) => console.log("Connect Success", countConnect())) // Gọi countConnect khi kết nối thành công
+      .then((_) => console.log("Connect Success ")) 
       .catch((err) => console.log("Connect Error")); // Ghi lỗi nếu kết nối thất bại
   }
 

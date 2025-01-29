@@ -91,17 +91,17 @@ class AccessService {
     */
 
   static login = async ({ email, password, refreshToken = null }) => {
-    console.log({ email });
+    console.log("email ben login access service: ", email);
     //1.
     const foundShop = await findByEmail({ email });
-    console.log({ email, foundShop });
+    console.log("foundShop in access service: ", foundShop);
     if (!foundShop) throw new BadRequestError("Error: Shop not resgistered");
 
     //2.
     const match = bcrypt.compare(password, foundShop.password);
     if (!match) throw new AuthFailureError("password mismatch");
 
-    // 3.Create privateKey, publicKey
+    // 3.Create privateKey, publicKey mới
     const privateKey = crypto.randomBytes(64).toString("hex");
     const publicKey = crypto.randomBytes(64).toString("hex");
 
@@ -113,6 +113,7 @@ class AccessService {
       publicKey,
       privateKey
     );
+    console.log("tokens ben access service:",tokens);
 
     await KeyTokenService.createKeyToken({
       userId: foundShop._id,
@@ -130,7 +131,7 @@ class AccessService {
   };
 
   static signUp = async ({ name, email, password }) => {
-    console.log("signUp wwith: name, email,password", name, email, password);
+    console.log("signUp wwith: name, email,password: ", name, email, password);
     // try {
     // Step 1: Check if email exists in the database. Nếu email đã tồn tại, ném lỗi BadRequestError.
 
@@ -189,7 +190,7 @@ class AccessService {
         privateKey
       );
 
-      console.log("Created token pair:", tokens);
+      console.log("Created token pair in access.service:", tokens);
 
       // Step 7: Return the response with shop details and token pair
       return {

@@ -9,10 +9,11 @@ const HEADER = {
     API_KEY: "x-api-key",
     CLIENT_ID: 'x-client-id',
     AUTHORIZATION: "authorization",
+    REFRESHTOKEN: 'refreshToken',
 };
 
 const createTokenPair = async ( payload, publicKey, privateKey ) => {
-    console.log({publicKey, privateKey})
+    console.log('Bên createTokenPair: ',{publicKey, privateKey})
     try {
         // accessToken
         const accessToken = await JWT.sign( payload, publicKey, {
@@ -32,7 +33,8 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
                 console.log(`decode verify::`, decode)
             }
         })
-        console.log(`accessToken in authUntils.js :`, accessToken,"and refreshToken::", refreshToken)
+        console.log(`accessToken in authUntils.js :`, accessToken);
+        console.log("refreshToken: ", refreshToken)
         return { accessToken, refreshToken}
     } catch (error) {
         console.error('Error creating token pair:', error);
@@ -79,6 +81,47 @@ const authentication = asyncHandler(async (req, res,next) => {
 
 })
 
+const authenticationV2 = asyncHandler(async (req, res,next) => {
+    console.log(req.headers)
+    /*
+        1 - Check userId missing ???
+        2 - get access token
+        3 - verify token
+        4 - check user trong db co correct khong
+        5 - check keyStore with this userId
+        6 - return next
+    */
+        //1
+        const userId = req.headers[HEADER.CLIENT_ID];
+        console.log({userId})
+        if(!userId)  throw new AuthFailureError("Invalid request") ;
+
+        //2
+        const keyStore = await findByUserId({userId});
+        console.log("KeyStore ", keyStore);
+        if(!keyStore) throw new NotFoundError("Invalid request") ;
+
+        
+
+        //3
+        const accessToken =  req.headers[HEADER.AUTHORIZATION];
+        console.log({accessToken})
+        if(!accessToken) throw new AuthFailureError("Invalid request") ;
+
+        //4
+        console.log("accessToken ", accessToken)
+        console.log("KeyStore Public Key:", keyStore.publicKey);
+        try {
+            const decodeUser = JWT.verify(accessToken,keyStore.publicKey);
+            console.log(`decodeUser verify::`, decodeUser)
+            if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
+            req.keyStore = keyStore;
+            return next();
+        } catch (error) {
+            throw error
+        }
+
+})
 
 const verifyJWT = async (token,kerSecret) => {
     return await JWT.verify(token, kerSecret);
