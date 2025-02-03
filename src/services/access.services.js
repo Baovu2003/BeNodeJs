@@ -21,60 +21,108 @@ const RoleShop = {
 };
 
 class AccessService {
-  // 1 -  Check token da duoc su dụng hay chua.
-  static handlerRefreshToken = async (refreshToken) => {
-    const foundToken = KeyTokenService.findByRefreshTokenUsed(refreshToken);
-    if (foundToken) {
-      const { userId, email } = await verifyJWT(
-        refreshToken,
-        foundToken.privateKey
-      );
-      console.log('[1]----',{ userId, email });
-      //  Khi xac nhan dc thang nay thi he thong phat hien userId nay da bi ro ri
-      // Neu dc su dung roi thì no se xoa token trong keyStore
-
+  static handlerRefreshTokenV2 = async ({ user, keyStore, refreshToken }) => {
+    console.log("ben access service",{ user, refreshToken });
+    console.log("keyStore: ",keyStore)
+    console.log("keyStore.refreshTokenUsed",keyStore.refreshTokenUsed)
+    const { userId, email } = user;
+    if (keyStore.refreshTokenUsed.includes(refreshToken)) {
       await KeyTokenService.deleteKeyById(userId);
       throw new ForbiddenError("Something wrong happend!!! Please relogin");
     }
 
-    // Neu nhu chua co thi chung ta viet 1 ham tim kiem refreshToken
+    if (keyStore.refreshToken != refreshToken) {
+      throw new AuthFailureError("Shop not registered 01");
+    }
 
-    const holderToken = KeyTokenService.findByRefreshToken(refreshToken);
-    if (!holderToken) throw new AuthFailureError("Shop not registered 01");
-    const { userId, email } = await verifyJWT(
-      refreshToken,
-      holderToken.privateKey
-    );
-
-    console.log('[2]----',{ userId, email });
-    const foundShop = await KeyTokenService.findByEmail(email);
-    if(!foundShop) throw new AuthFailureError("Shop not registered 02");
-    
+    const foundShop = await findByEmail({ email });
+    console.log("foundShop:-----", foundShop);
+    if (!foundShop) throw new AuthFailureError("Shop not registered 02");
     // Neu nhu tim dc cap lai 1 accessToken moi dong thoi dua refreshToken nay vao da dc su dung
 
     // create 1 cap moi
-    const tokens = await createTokenPair({userId,email,},
-      holderToken.publicKey,
-      holderToken.privateKey
+    const tokens = await createTokenPair(
+      { userId, email },
+      keyStore.publicKey,
+      keyStore.privateKey
     );
+    console.log("tokens: ", tokens);
+    console.log("tokens.refreshToken: ",tokens.refreshToken);
+    console.log("refreshToken: ",refreshToken)
 
     // --Update token
-    await holderToken.update({
-      $set: {
-        refreshTokenUsed: tokens.refreshToken
-      
-      },
-      $addToSet: {
-          refreshTokenUsed: refreshToken
-      }
-    })
+    // await keyStore.update({
+    //   $set: {
+    //     refreshTokenUsed: tokens.refreshToken,
+    //   },
+    //   $addToSet: {
+    //     refreshTokenUsed: refreshToken,
+    //   },
+    // });
+
+    keyStore.refreshToken = tokens.refreshToken;
+keyStore.refreshTokenUsed.push(refreshToken);
+await keyStore.save();
 
     return {
-      user: {userId,email},
-      tokens
-    }
-
+      user: { userId, email },
+      tokens,
+    };
   };
+
+  // 1 -  Check token da duoc su dụng hay chua.
+  // static handlerRefreshToken = async (refreshToken) => {
+  //   const foundToken = KeyTokenService.findByRefreshTokenUsed(refreshToken);
+  //   if (foundToken) {
+  //     const { userId, email } = await verifyJWT(
+  //       refreshToken,
+  //       foundToken.privateKey
+  //     );
+  //     console.log("[1]----", { userId, email });
+  //     //  Khi xac nhan dc thang nay thi he thong phat hien userId nay da bi ro ri
+  //     // Neu dc su dung roi thì no se xoa token trong keyStore
+
+  //     await KeyTokenService.deleteKeyById(userId);
+  //     throw new ForbiddenError("Something wrong happend!!! Please relogin");
+  //   }
+
+  //   // Neu nhu chua co thi chung ta viet 1 ham tim kiem refreshToken
+
+  //   const holderToken = KeyTokenService.findByRefreshToken(refreshToken);
+  //   if (!holderToken) throw new AuthFailureError("Shop not registered 01");
+  //   const { userId, email } = await verifyJWT(
+  //     refreshToken,
+  //     holderToken.privateKey
+  //   );
+
+  //   console.log("[2]----", { userId, email });
+  //   const foundShop = await KeyTokenService.findByEmail(email);
+  //   if (!foundShop) throw new AuthFailureError("Shop not registered 02");
+
+  //   // Neu nhu tim dc cap lai 1 accessToken moi dong thoi dua refreshToken nay vao da dc su dung
+
+  //   // create 1 cap moi
+  //   const tokens = await createTokenPair(
+  //     { userId, email },
+  //     holderToken.publicKey,
+  //     holderToken.privateKey
+  //   );
+
+  //   // --Update token
+  //   await holderToken.update({
+  //     $set: {
+  //       refreshTokenUsed: tokens.refreshToken,
+  //     },
+  //     $addToSet: {
+  //       refreshTokenUsed: refreshToken,
+  //     },
+  //   });
+
+  //   return {
+  //     user: { userId, email },
+  //     tokens,
+  //   };
+  // };
 
   static logout = async (keyStore) => {
     const dellKey = KeyTokenService.removeKeyById(keyStore);
@@ -113,7 +161,7 @@ class AccessService {
       publicKey,
       privateKey
     );
-    console.log("tokens ben access service:",tokens);
+    console.log("tokens ben access service:", tokens);
 
     await KeyTokenService.createKeyToken({
       userId: foundShop._id,

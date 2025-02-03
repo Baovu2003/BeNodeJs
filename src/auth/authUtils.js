@@ -9,7 +9,7 @@ const HEADER = {
     API_KEY: "x-api-key",
     CLIENT_ID: 'x-client-id',
     AUTHORIZATION: "authorization",
-    REFRESHTOKEN: 'refreshToken',
+    REFRESHTOKEN: 'x-rtoken-id',
 };
 
 const createTokenPair = async ( payload, publicKey, privateKey ) => {
@@ -104,6 +104,24 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
         
 
         //3
+        if(req.headers[HEADER.REFRESHTOKEN]){
+            try {
+            const refreshToken = req.headers[HEADER.REFRESHTOKEN];
+
+                const decodeUser = JWT.verify(refreshToken,keyStore.privateKey);
+                console.log(`decodeUser verify::`, decodeUser)
+                if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
+                req.keyStore = keyStore;
+                req.user = decodeUser;
+                req.refreshToken =refreshToken;
+                console.log({keyStore:keyStore,refreshToken:refreshToken,user:decodeUser})
+                console.log("Dong 2: ",req.keyStore,"---req.refreshToken: ",
+                            req.refreshToken,"---req.user: ",req.user)
+                return next();
+            } catch (error) {
+                throw error
+            }
+        }
         const accessToken =  req.headers[HEADER.AUTHORIZATION];
         console.log({accessToken})
         if(!accessToken) throw new AuthFailureError("Invalid request") ;
@@ -128,5 +146,5 @@ const verifyJWT = async (token,kerSecret) => {
 }
 
 module.exports = {
-    createTokenPair,authentication,verifyJWT
+    createTokenPair,authentication,verifyJWT,authenticationV2
 }

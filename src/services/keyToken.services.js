@@ -65,7 +65,7 @@ class KeyTokenService {
   static findByUserId = async ({ userId }) => {
     console.log("userId in keyTokenService: " + userId);
     const userObjectId = new Types.ObjectId(userId);
-    return await keytokenModel.findOne({ user: userObjectId }).lean();
+    return await keytokenModel.findOne({ user: userObjectId })
   };
   // static findByUserId = async ({ userId }) => {
   //     try {
@@ -101,6 +101,9 @@ class KeyTokenService {
   static deleteKeyById = async (userId) => {
     return await keytokenModel.findOneAndDelete({ user: userId });
   };
+  static async updateKeyToken(id, updateObject) {
+    return await keytokenModel.findByIdAndUpdate(id, updateObject, { new: true });
+  }
 }
 
 module.exports = KeyTokenService;

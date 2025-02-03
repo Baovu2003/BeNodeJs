@@ -4,10 +4,29 @@ class AccessController {
 
 
     handlerRefreshToken = async (req, res,next) => {
-        console.log("logout in controller")
+
+        // v1
+
+        // console.log("logout in controller")
+        // new SuccessResponse({
+        //     message: "Get Token success",
+        //     metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
+        // }).send(res);
+
+        // v2
+
+        console.log("handlerRefreshToken in controller:")
+        console.log("req.keyStore: ",req.keyStore,)
+        console.log("---req.refreshToken: ", req.refreshToken,)
+        console.log("---req.user: ",req.user)
         new SuccessResponse({
             message: "Get Token success",
-            metadata: await AccessService.handlerRefreshToken(req.body.refreshToken)
+            metadata: await AccessService.handlerRefreshTokenV2({
+                refreshToken: req.refreshToken,
+                user: req.user,
+                keyStore:req.keyStore
+            }
+                )
         }).send(res);
     }
 
