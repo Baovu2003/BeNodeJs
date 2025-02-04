@@ -3,7 +3,7 @@
 
 POST {{url_dev}}/shop/signup
 Content-Type: application/json
-x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d3cab2bf0f597f8c983c757f735fbafd6fa2ff7de3690ba04470066b611b
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 
 {
     "name": "Shop TIPS",
@@ -15,10 +15,10 @@ x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d
 
 POST {{url_dev}}/shop/login
 Content-Type: application/json
-x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d3cab2bf0f597f8c983c757f735fbafd6fa2ff7de3690ba04470066b611b
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 
 {
-    "email": "shoptipjs01@gmail.com",
+    "email": "shoptipjs02@gmail.com",
     "password": "abc123"
 }
 
@@ -26,14 +26,36 @@ x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d
 
 POST {{url_dev}}/shop/logout
 Content-Type: application/json
-x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d3cab2bf0f597f8c983c757f735fbafd6fa2ff7de3690ba04470066b611b
-x-client-id: 678a97fea1982fc0ac9e94b3
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
 authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhhOTdmZWExOTgyZmMwYWM5ZTk0YjMiLCJlbWFpbCI6InNob3B0aXBqczAxQGdtYWlsLmNvbSIsImlhdCI6MTczNzMzNjQ2MSwiZXhwIjoxNzM3NTA5MjYxfQ.oydVAbMbMq7LUI4PCvknXLcM9yO2f3f6kg6aCtby8-s
 
 ###
 
 POST {{url_dev}}/shop/handlerRefreshToken
 Content-Type: application/json
-x-api-key: 1a9732d2f8f3e4df28bcb3ffea29afd147028fab8e0d4aec848cfea8a67237430a25d3cab2bf0f597f8c983c757f735fbafd6fa2ff7de3690ba04470066b611b
-x-client-id: 678a97fea1982fc0ac9e94b3
-x-rtoken-id: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhhOTdmZWExOTgyZmMwYWM5ZTk0YjMiLCJlbWFpbCI6InNob3B0aXBqczAxQGdtYWlsLmNvbSIsImlhdCI6MTczODQ4MzEwNSwiZXhwIjoxNzM5MDg3OTA1fQ.ljtQuQCjMkdcB2SdbPz237hV0dVD8YPObGX4hco6Tcg
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+x-rtoken-id: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczODY1Mzg1NSwiZXhwIjoxNzM5MjU4NjU1fQ.f50a_pPmoafNTuwVQtDUaJ1476lzWMCIozvt3W_cT3Q
+
+###
+POST {{url_dev}}product
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczODY1Mzg3MSwiZXhwIjoxNzM5MjU4NjcxfQ.qtrDCmGTA2TIm2fh3hxqlofaPXE4OE7zNCmjo_pG6QM
+
+{
+  "product_name": "Áo Polo",
+  "product_thumb": "https://example.com/aopolo.jpg",
+  "product_description": "Áo polo vải cotton mềm mại.",
+  "product_price": 300000,
+  "product_quantity": 50,
+  "product_type": "Clothing",
+  "product_shop": "67a1bc650682ba58d66bbdbb",
+  "product_attributes": {
+    "brand": "Lacoste",
+    "size": "M",
+    "material": "Cotton"
+  }
+}

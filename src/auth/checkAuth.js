@@ -14,7 +14,7 @@ const HEADER = {
 // Nếu hợp lệ, lưu trữ thông tin API key vào req.objKey và chuyển tiếp đến middleware tiếp theo.
 
 const apiKey = async (req, res, next) => {
-    console.log("req.headers",req.headers)
+    console.log("req.headers ben checkAuth",req.headers)
     try {
         const key = req.headers[HEADER.API_KEY]?.toString();
         console.log("key",key)
