@@ -60,17 +60,36 @@ class ProductController {
 
   getAllPublishedShop = async (req, res, next) => {
     console.log("req.body ben product-controller", req.body);
-    // new SuccessResponse({
-    //   message: "Create Product success",
-    //   metadata: await ProductService.createProduct(req.body.product_type, {
-    //     ...req.body,
-    //     product_shop: req.user.userId,
-    //   }),
-    // }).send(res);
      new SuccessResponse({
       message: "Get getAllPublishedShop success",
       metadata: await ProductServiceV2.findAllPublishedShopService({
         product_shop: req.user.userId,
+      }),
+    }).send(res);
+  };
+
+  searchProductShop = async (req, res, next) => {
+    console.log("req.body ben product-controller", req.body);
+     new SuccessResponse({
+      message: "Search success",
+      metadata: await ProductServiceV2.getListSearchProducts(req.params),
+    }).send(res);
+  };
+
+  findAllProducts = async (req, res, next) => {
+    console.log("req.body ben product-controller", req.body);
+     new SuccessResponse({
+      message: "getAllProduct success",
+      metadata: await ProductServiceV2.findAllProducts(req.query),
+    }).send(res);
+  };
+
+  findProductDetail = async (req, res, next) => {
+    console.log("req.body ben product-controller", req.body);
+     new SuccessResponse({
+      message: "get Detail Product success",
+      metadata: await ProductServiceV2.findProductDetail({
+        product_id: req.params.product_id,
       }),
     }).send(res);
   };

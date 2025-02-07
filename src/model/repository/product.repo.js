@@ -7,12 +7,43 @@ const {
     furniture,
 } = require("../../model/product.model");
 const { Types } = require("mongoose");
+const { unGetSelectData } = require("../../untils");
 const findAllDraftsShopRepo = async ({ query, limit, skip }) => {
     return await queryProduct({ query, limit, skip})
 }
 const findAllPublishedShopRepo = async ({ query, limit, skip }) => {
     return await await queryProduct({ query, limit, skip})
 };
+// const searchProducts = async ({ keySearch}) => {
+//     const regexSearch = new RegExp(keySearch);
+//     console.log(regexSearch)
+//     const result = await product.find({
+//         $text:{$search: regexSearch}},
+//         {score: {$meta:'textscore'}}
+//        ).lean()
+
+//        return result;
+// }
+const searchProducts = async ({ keySearch }) => {
+    if (!keySearch || keySearch.trim().length === 0) {
+        return []; // Trả về mảng rỗng nếu không có từ khóa tìm kiếm
+    }
+
+    console.log({ keySearch });
+
+    const result = await product.find(
+        { 
+            isPublished: true,
+            $text: { $search: keySearch }
+        },
+        { 
+            score: { $meta: "textScore" }
+        }
+    ).sort({ score: { $meta: "textScore" } }).lean();
+
+    return result;
+};
+
 
 const publisProductByShopRepo = async ({ product_shop, product_id }) => {
     const foundShop = await product.findOne({
@@ -44,6 +75,22 @@ const unPublisProductByShopRepo = async ({ product_shop, product_id }) => {
     return modifiedCount;
 };
 
+const findAllProducts = async ({limit=50, sort ,page,filter,select}) =>{
+    const skip = (page-1) *limit;
+    const sortBy = sort ==="ctime" ? {_id:-1} : {_id:1}
+    const products = await product.find(filter)
+    .sort(sortBy)
+    .skip(skip)
+    .limit(limit)
+    .select(select)
+    .lean()
+    return products;
+}
+const findProductDetail = async ({product_id,unSelect}) =>{
+
+    return await product.findById(product_id).select(unGetSelectData(unSelect)).lean()
+}
+
 const queryProduct = async ({ query, limit, skip }) => {
     return await product
         .find(query)
@@ -59,5 +106,8 @@ module.exports = {
     findAllDraftsShopRepo,
     findAllPublishedShopRepo,
     publisProductByShopRepo,
-    unPublisProductByShopRepo
+    unPublisProductByShopRepo,
+    searchProducts,
+    findAllProducts,
+    findProductDetail
 };

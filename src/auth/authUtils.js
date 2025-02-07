@@ -93,7 +93,7 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
     */
         //1
         const userId = req.headers[HEADER.CLIENT_ID];
-        console.log({userId})
+        console.log("userId in authUtils",userId)
         if(!userId)  throw new AuthFailureError("Invalid request") ;
 
         //2

@@ -110,3 +110,17 @@ x-client-id: 67a1bc650682ba58d66bbdbb
 x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczODY1Mzg3MSwiZXhwIjoxNzM5MjU4NjcxfQ.qtrDCmGTA2TIm2fh3hxqlofaPXE4OE7zNCmjo_pG6QM
 
 
+###
+GET {{url_dev}}product/search/banban
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+# x-client-id: 67a1bc650682ba58d66bbdbb
+
+###
+GET {{url_dev}}product
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+# x-client-id: 67a1bc650682ba58d66bbdbb
+
+###
+GET {{url_dev}}product/67a5b2576656f52dbb0e7365
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+# x-client-id: 67a1bc650682ba58d66bbdbb

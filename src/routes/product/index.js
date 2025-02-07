@@ -4,8 +4,13 @@ const { asyncHandler } = require('../../helpers/asyncHandler');
 const { authentication,authenticationV2 } = require('../../auth/authUtils');
 const router = express.Router();
 
+router.get("/search/:keySearch",(productControllers.searchProductShop))
+router.get("",(productControllers.findAllProducts))
+router.get("/:product_id",(productControllers.findProductDetail))
+
 
 router.use(authenticationV2)
+
 router.post('', asyncHandler(productControllers.createNewProduct));
 router.post('/published/:id', asyncHandler(productControllers.updatePublishedProductByShop));
 router.post('/unPublished/:id', asyncHandler(productControllers.unPublisProductByShop));

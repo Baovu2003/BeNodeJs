@@ -1,7 +1,7 @@
 "use strict";
 const { product, electronic, clothing,furniture } = require("../model/product.model");
 const { BadRequestError, ForbiddenError } = require("../core/error.response");
-const {findAllDraftsShopRepo, findAllPublishedShopRepo, publisProductByShopRepo,unPublisProductByShopRepo} = require("../model/repository/product.repo")
+const {findAllDraftsShopRepo, findAllPublishedShopRepo, publisProductByShopRepo,unPublisProductByShopRepo, searchProducts, findAllProducts, findProductDetail} = require("../model/repository/product.repo")
 // define factory class to create product
 class ProductFactory {
 
@@ -38,10 +38,27 @@ class ProductFactory {
       return await findAllPublishedShopRepo({query, limit, skip})
     }
 
-    static async searchProducts({keySearch}){
-      
+    static async getListSearchProducts({keySearch}){
+      return await searchProducts({keySearch})
+    }
+
+    static async findAllProducts({limit=50, sort = 'ctime',page=1,filter={isPublished:true}}){
+      return await findAllProducts({limit,sort, page, filter,
+        select:['product_name', 'product_price', 'product_thumb'],
+      })
+    }
+
+    static async findProductDetail({product_id}){
+      return await findProductDetail({product_id:product_id,unSelect:['__v','product_variations']})
+    }
+
+    static updateProduct(type, payload) {
+      const productClass = ProductFactory.productRegistry[type];
+      if (!productClass) throw new BadRequestError(`Invalid product type ${type}`);
+      return new productClass(payload).createProduct();
     }
 }
+
  // end query //
 
 
