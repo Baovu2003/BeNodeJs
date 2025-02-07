@@ -7,6 +7,10 @@ const router = express.Router();
 
 router.use(authenticationV2)
 router.post('', asyncHandler(productControllers.createNewProduct));
-
+router.post('/published/:id', asyncHandler(productControllers.updatePublishedProductByShop));
+router.post('/unPublished/:id', asyncHandler(productControllers.unPublisProductByShop));
+// query
+router.get('/drafts/all', asyncHandler(productControllers.getAllDrafsShop));
+router.get('/published/all', asyncHandler(productControllers.getAllPublishedShop));
 
 module.exports =router;

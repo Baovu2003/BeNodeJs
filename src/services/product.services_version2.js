@@ -1,6 +1,7 @@
 "use strict";
 const { product, electronic, clothing,furniture } = require("../model/product.model");
 const { BadRequestError, ForbiddenError } = require("../core/error.response");
+const {findAllDraftsShopRepo, findAllPublishedShopRepo, publisProductByShopRepo,unPublisProductByShopRepo} = require("../model/repository/product.repo")
 // define factory class to create product
 class ProductFactory {
 
@@ -12,12 +13,41 @@ class ProductFactory {
       const productClass = ProductFactory.productRegistry[type];
       if (!productClass) throw new BadRequestError(`Invalid product type ${type}`);
       return new productClass(payload).createProduct();
+    }   
+
+     // PUT ///
+   static async publishProductByShop({product_shop,product_id}){
+    return publisProductByShopRepo({product_shop, product_id})
+   }
+   static async unPublisProductByShop({product_shop,product_id}){
+    return unPublisProductByShopRepo({product_shop, product_id})
+   }
+    // END PUT//
+
+
+    // query //
+
+    static async findAllDraftsShopService({product_shop, limit=50,skip=0}){
+      const query = {product_shop, isDraft:true};
+      return await findAllDraftsShopRepo({query, limit, skip})
     }
-    
 
+    static async findAllPublishedShopService({product_shop, limit=50,skip=0}){
+      const query = {product_shop, isPublished:true};
+      console.log(query);
+      return await findAllPublishedShopRepo({query, limit, skip})
+    }
+
+    static async searchProducts({keySearch}){
+      
+    }
 }
-// definE BASE  product class
+ // end query //
 
+
+
+
+// definE BASE  product class
 class Product {
   constructor({
     product_name,
