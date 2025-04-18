@@ -9,6 +9,7 @@ const apiKeyModel = require("../model/apiKey.model");
 
 const findById = async (key) => {
     try {
+        // Luc dau tao ra 1 api key khi ng dung dki va no se theo suot trong qua trinh get post data
             // const newKey = await apiKeyModel.create({key:crypto.randomBytes(64).toString('hex'),permissions:['0000']});
             // console.log("Generated API Key:", newKey);
         const objectKey = await apiKeyModel.findOne({ key, status: true }).lean();

@@ -41,6 +41,7 @@ class ProductController {
       }),
     }).send(res);
   }
+  
   unPublisProductByShop = async (req,res,next) =>{
     new SuccessResponse({
       message: "Updated Product success",

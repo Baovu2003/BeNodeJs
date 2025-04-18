@@ -7,12 +7,16 @@ const {
   furniture,
 } = require("../../model/product.model");
 const { Types } = require("mongoose");
-const { unGetSelectData } = require("../../untils");
+const { unGetSelectData, convetToObjectId } = require("../../untils");
+const { NotFoundError } = require("../../core/error.response");
+
+
+
 const findAllDraftsShopRepo = async ({ query, limit, skip }) => {
   return await queryProduct({ query, limit, skip });
 };
 const findAllPublishedShopRepo = async ({ query, limit, skip }) => {
-  return await await queryProduct({ query, limit, skip });
+  return await queryProduct({ query, limit, skip });
 };
 // const searchProducts = async ({ keySearch}) => {
 //     const regexSearch = new RegExp(keySearch);
@@ -26,7 +30,7 @@ const findAllPublishedShopRepo = async ({ query, limit, skip }) => {
 // }
 const searchProducts = async ({ keySearch }) => {
   if (!keySearch || keySearch.trim().length === 0) {
-    return []; // Trả về mảng rỗng nếu không có từ khóa tìm kiếm
+    return []; 
   }
 
   console.log({ keySearch });
@@ -54,7 +58,7 @@ const publisProductByShopRepo = async ({ product_shop, product_id }) => {
   });
 
   if (!foundShop) {
-    return null;
+    throw new NotFoundError(`Product not found`);
   }
   foundShop.isDraft = false;
   foundShop.isPublished = true;
@@ -67,9 +71,9 @@ const unPublisProductByShopRepo = async ({ product_shop, product_id }) => {
     product_shop: new Types.ObjectId(product_shop),
     _id: new Types.ObjectId(product_id),
   });
-
+  console.log("foundShop",foundShop);
   if (!foundShop) {
-    return null;
+    throw new NotFoundError(`Product not found`);
   }
   foundShop.isDraft = true;
   foundShop.isPublished = false;
@@ -101,12 +105,6 @@ const updateProductById = async (
   isNew = true
 ) => {
   console.log("bodyUpdate ben product.repo cua updateproductById", bodyUpdate);
-//   return (
-//     await model.findByIdAndUpdate(productId, bodyUpdate),
-//     {
-//       new: isNew,
-//     }
-//   );
 return await model.findByIdAndUpdate(productId, bodyUpdate, {
     new: isNew,
 });
@@ -123,6 +121,10 @@ const queryProduct = async ({ query, limit, skip }) => {
     .lean(); // Trả về một bản sao JSON thuần túy, giúp cải thiện hiệu suất
 };
 
+const getProductById = async (productId) => {
+  return await product.findById({_id: convetToObjectId(productId)}).lean();
+};
+
 module.exports = {
   findAllDraftsShopRepo,
   findAllPublishedShopRepo,
@@ -132,4 +134,5 @@ module.exports = {
   findAllProducts,
   findProductDetail,
   updateProductById,
+  getProductById
 };

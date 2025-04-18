@@ -87,8 +87,7 @@ PATCH {{url_dev}}product/67b0a4a61613dac92b64feb0
 Content-Type: application/json
 x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 x-client-id: 67a1bc650682ba58d66bbdbb
-x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczOTQ1OTkyMCwiZXhwIjoxNzQwMDY0NzIwfQ.OzFhzQQ3uxPacUQro5Hc8HZVJFEDLvEB_5lyylbhQCA
-
+x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc4OTU1NSwiZXhwIjoxNzQyOTYyMzU1fQ.0niWWQxbmqVHlay3HyjtrTWvWe9HUJN43dguyB0zhI8
 {
      "product_attributes": {
         "manufacturer": "LuxHome03",
@@ -103,14 +102,12 @@ x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJ
 GET {{url_dev}}product/drafts/all
 x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 x-client-id: 67a1bc650682ba58d66bbdbb
-x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczOTQ1OTkyMCwiZXhwIjoxNzQwMDY0NzIwfQ.OzFhzQQ3uxPacUQro5Hc8HZVJFEDLvEB_5lyylbhQCA
-
+x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc5MTAwMywiZXhwIjoxNzQzMzk1ODAzfQ.UtSUxc2oI89uBkVdhA2CCA0QLcAHg4qlLubzm2abYbA
 ###
 GET {{url_dev}}product/published/all
 x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 x-client-id: 67a1bc650682ba58d66bbdbb
-x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczOTQ1OTkyMCwiZXhwIjoxNzQwMDY0NzIwfQ.OzFhzQQ3uxPacUQro5Hc8HZVJFEDLvEB_5lyylbhQCA
-
+x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc5MTAwMywiZXhwIjoxNzQzMzk1ODAzfQ.UtSUxc2oI89uBkVdhA2CCA0QLcAHg4qlLubzm2abYbA
 ###
 POST {{url_dev}}product/published/67aee39708978564b2cb2bfa
 Content-Type: application/json
@@ -205,8 +202,7 @@ GET {{url_dev}}discount/?shopId=67a1bc650682ba58d66bbdbb&limit=50&page=1
 Content-Type: application/json
 x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
 x-client-id: 67a1bc650682ba58d66bbdbb
-x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTczOTQ1OTkyMCwiZXhwIjoxNzQwMDY0NzIwfQ.OzFhzQQ3uxPacUQro5Hc8HZVJFEDLvEB_5lyylbhQCA
-
+x-rtoken-id:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2ExYmM2NTA2ODJiYTU4ZDY2YmJkYmIiLCJlbWFpbCI6InNob3B0aXBqczAyQGdtYWlsLmNvbSIsImlhdCI6MTc0Mjc4OTU1NSwiZXhwIjoxNzQzMzk0MzU1fQ.4nVhFAZFrFUdZ2x4iJf_FoKgn9-sfT0qJK6ogdz6o88
 ###
 POST {{url_dev}}discount/amount
 Content-Type: application/json
@@ -221,4 +217,64 @@ x-client-id: 67a1bc650682ba58d66bbdbb
     "quantity": 5,
     "price": 100000
   }] 
+}
+
+###
+POST {{url_dev}}cart/create
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+
+{
+  "userId": "1122", 
+  "product":{
+    "productId": "67e1c1d6a3b5cf84edbc2f2b",
+    "shopId":"67e18b1995636580d32971d0", 
+    "quantity": 1,
+    "name": "Áo Polo1",
+    "price": 300000
+  }
+}
+
+###
+POST {{url_dev}}cart/update
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+
+{
+   "userId":"1122",
+  "shop_order_ids":[
+     {
+          "shopId":"67e18b1995636580d32971d0",
+          "item_products":[
+              {
+                  "productId": "67e1c1d6a3b5cf84edbc2f2b",
+                  "shopId":"67e18b1995636580d32971d0",
+                  "price": 300000,
+                  "quantity": 5,
+                  "old_quantity": 1
+              }
+          ]
+      }
+   ],
+    "userId": "1122"
+}
+
+###
+GET {{url_dev}}cart/?userId=1122
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+
+
+###
+POST {{url_dev}}cart/delete
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+
+{
+  "userId": "1122",
+  "productId": "67e1c1d6a3b5cf84edbc2f2b"
 }

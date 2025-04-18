@@ -22,9 +22,9 @@ const RoleShop = {
 
 class AccessService {
   static handlerRefreshTokenV2 = async ({ user, keyStore, refreshToken }) => {
-    console.log("ben access service",{ user, refreshToken });
-    console.log("keyStore: ",keyStore)
-    console.log("keyStore.refreshTokenUsed",keyStore.refreshTokenUsed)
+    console.log("ben access service", { user, refreshToken });
+    console.log("keyStore: ", keyStore)
+    console.log("keyStore.refreshTokenUsed", keyStore.refreshTokenUsed)
     const { userId, email } = user;
     if (keyStore.refreshTokenUsed.includes(refreshToken)) {
       await KeyTokenService.deleteKeyById(userId);
@@ -47,8 +47,8 @@ class AccessService {
       keyStore.privateKey
     );
     console.log("tokens: ", tokens);
-    console.log("tokens.refreshToken: ",tokens.refreshToken);
-    console.log("refreshToken: ",refreshToken)
+    console.log("tokens.refreshToken: ", tokens.refreshToken);
+    console.log("refreshToken: ", refreshToken)
 
     // --Update token
     // await keyStore.update({
@@ -61,8 +61,8 @@ class AccessService {
     // });
 
     keyStore.refreshToken = tokens.refreshToken;
-keyStore.refreshTokenUsed.push(refreshToken);
-await keyStore.save();
+    keyStore.refreshTokenUsed.push(refreshToken);
+    await keyStore.save();
 
     return {
       user: { userId, email },
@@ -124,13 +124,14 @@ await keyStore.save();
   //   };
   // };
 
+
   static logout = async (keyStore) => {
     const dellKey = KeyTokenService.removeKeyById(keyStore);
     console.log({ dellKey });
     return dellKey;
   };
 
-  /*
+  /* ====================LOGIN =================================
     1 - check email in db
     2 - match password
     3 - create AccessToken and resfreshToken
@@ -163,12 +164,14 @@ await keyStore.save();
     );
     console.log("tokens ben access service:", tokens);
 
+    //==4.
     await KeyTokenService.createKeyToken({
       userId: foundShop._id,
       refreshToken: tokens.refreshToken,
       privateKey,
       publicKey,
     });
+    // 5 - get data return login
     return {
       shop: getInforData({
         fileds: ["_id", "name", "email"],
@@ -178,6 +181,8 @@ await keyStore.save();
     };
   };
 
+  
+    // ====================LOGOUT =================================
   static signUp = async ({ name, email, password }) => {
     console.log("signUp wwith: name, email,password: ", name, email, password);
     // try {
@@ -186,10 +191,6 @@ await keyStore.save();
     const hodelShop = await shopModel.findOne({ email });
     if (hodelShop) {
       throw new BadRequestError("Error:Email already exists roi nhe");
-      // return {
-      //     code: "XXXX",
-      //     message: "Email already exists",
-      // };
     }
 
     // Step 2: Hash the password: Sử dụng bcrypt để băm mật khẩu của người dùng.
@@ -229,11 +230,9 @@ await keyStore.save();
       }
 
       // Step 6: Gọi createTokenPair để tạo token accessToken và refreshToken.
-      const tokens = await createTokenPair(
-        {
+      const tokens = await createTokenPair({
           userId: newShop._id,
-          email,
-        },
+          email,},
         publicKey,
         privateKey
       );
@@ -252,13 +251,7 @@ await keyStore.save();
         },
       };
     }
-    // } catch (error) {
-    //     console.error("Error during signup:", error.message);
-    //     return {
-    //         code: "ERROR",
-    //         message: error.message,
-    //     };
-    // }
+
   };
 }
 

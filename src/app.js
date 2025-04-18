@@ -12,10 +12,12 @@ app.use(compression());
 
 require("./dbs/init.mongodb");
 const { checkOverloading } = require("./helpers/check.connect");
+const { configSwagger } = require("./swagger");
 checkOverloading();
 
 app.use(express.json());
-// app.use(express.urlencoded());
+// -------------Thêm Swagger vào ứng dụng dùng cho yaml-----------------
+configSwagger(app)
 
 app.use("/", require("./routes/index"));
 

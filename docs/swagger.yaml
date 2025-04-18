@@ -1,0 +1,868 @@
+openapi: 3.0.0
+info:
+  title: E-commerce Shop API
+  version: 1.0.0
+  description: API documentation for an E-commerce Shop built with NodeJS, ExpressJS, and MongoDB.
+  contact:
+    name: Vũ Lương Bảo
+    email: vuluongbao.qc2003@gmail.com
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3055/v1/api/
+    description: Local development server
+tags:
+  - name: Shop
+    description: Shop authentication and management
+  - name: Product
+    description: Product management
+  - name: Discount
+    description: Discount management
+
+paths:
+  # Shop Authentication
+  /shop/signup:
+    post:
+      summary: Sign up a new shop
+      tags:
+        - Shop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShopSignupRequest"
+      responses:
+        "201":
+          description: Shop created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShopSignupResponse"
+        "400":
+          description: Invalid input data
+      security:
+        - ApiKey: []
+  /shop/login:
+    post:
+      summary: Log in a shop
+      tags:
+        - Shop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShopLoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShopLoginResponse"
+        "401":
+          description: Invalid email or password
+      security:
+        - ApiKey: []
+  /shop/logout:
+    post:
+      summary: Log out a shop
+      tags:
+        - Shop
+      responses:
+        "200":
+          description: Logout successful
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - JWT: []
+        - ClientId: []
+  /shop/handlerRefreshToken:
+    post:
+      summary: Handle refresh token for shop
+      tags:
+        - Shop
+      responses:
+        "200":
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShopRefreshResponse"
+        "400":
+          description: Invalid refresh token
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+
+  # Product Management
+  /product:
+    post:
+      summary: Create a new product
+      tags:
+        - Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreateRequest"
+      responses:
+        "201":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+    get:
+      summary: Get all products
+      tags:
+        - Product
+      responses:
+        "200":
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+      security:
+        - ApiKey: []
+  /product/{productId}:
+    get:
+      summary: Get a product by ID
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67ae273bd253cc6a1b7b1c9b
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "404":
+          description: Product not found
+      security:
+        - ApiKey: []
+    patch:
+      summary: Update a product
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67b0a4a61613dac92b64feb0
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductUpdateRequest"
+      responses:
+        "200":
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+        "404":
+          description: Product not found
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /product/drafts/all:
+    get:
+      summary: Get all draft products
+      tags:
+        - Product
+      responses:
+        "200":
+          description: List of draft products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /product/published/all:
+    get:
+      summary: Get all published products
+      tags:
+        - Product
+      responses:
+        "200":
+          description: List of published products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+        "401":
+          description: Unauthorized
+      security:
+        - JWT: []
+        # - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []      
+  /product/published/{productId}:
+    post:
+      summary: Publish a product
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67aee39708978564b2cb2bfa
+      responses:
+        "200":
+          description: Product published successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Product not found
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /product/unPublished/{productId}:
+    post:
+      summary: Unpublish a product
+      tags:
+        - Product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67aee39708978564b2cb2bfa
+      responses:
+        "200":
+          description: Product unpublished successfully
+        "401":
+          description: Unauthorized
+        "404":
+          description: Product not found
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /product/search/{keyword}:
+    get:
+      summary: Search products by keyword
+      tags:
+        - Product
+      parameters:
+        - name: keyword
+          in: path
+          required: true
+          schema:
+            type: string
+          example: banban
+      responses:
+        "200":
+          description: List of matching products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+      security:
+        - ApiKey: []
+
+  # Discount Management
+  /discount/:
+    post:
+      summary: Create a new discount
+      tags:
+        - Discount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountCreateRequest"
+      responses:
+        "201":
+          description: Discount created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscountResponse"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+    get:
+      summary: Get discounts by shop
+      tags:
+        - Discount
+      parameters:
+        - name: shopId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 67a1bc650682ba58d66bbdbb
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: List of discounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DiscountResponse"
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /discount/updateDiscount/{discountId}:
+    patch:
+      summary: Update a discount
+      tags:
+        - Discount
+      parameters:
+        - name: discountId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67b0b1043dcf758bf53de95d
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountUpdateRequest"
+      responses:
+        "200":
+          description: Discount updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiscountResponse"
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+        "404":
+          description: Discount not found
+      security:
+        - ApiKey: []
+        - ClientId: []
+        - RefreshToken: []
+  /discount/list_product_code:
+    get:
+      summary: Get products by discount code
+      tags:
+        - Discount
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          example: BIRTHDAY22
+        - name: shopId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: 67a1bc650682ba58d66bbdbb
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: List of products for the discount code
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+      security:
+        - ApiKey: []
+  /discount/amount:
+    post:
+      summary: Calculate discount amount
+      tags:
+        - Discount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DiscountAmountRequest"
+      responses:
+        "200":
+          description: Discount amount calculated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalDiscount:
+                    type: number
+                    example: 50000
+        "400":
+          description: Invalid input data
+        "401":
+          description: Unauthorized
+      security:
+        - ApiKey: []
+        - ClientId: []
+
+components:
+  schemas:
+    # Shop Schemas
+    ShopSignupRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          example: Vũ Lương Bảo
+        email:
+          type: string
+          example: baovuluong2003@gmail.com
+        password:
+          type: string
+          example: 123
+    ShopSignupResponse:
+      type: object
+      properties:
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        name:
+          type: string
+          example: Vũ Lương Bảo
+        email:
+          type: string
+          example: baovuluong2003@gmail.com
+    ShopLoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: baovuluong2003@gmail.com
+        password:
+          type: string
+          example: 123
+    ShopLoginResponse:
+      type: object
+      properties:
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    ShopRefreshResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    # Product Schemas
+    
+    ProductCreateRequest:
+      type: object
+      required:
+        - product_name
+        - product_thumb
+        - product_description
+        - product_price
+        - product_quantity
+        - product_type
+      properties:
+        product_name:
+          type: string
+          example: Áo Polo
+        product_thumb:
+          type: string
+          example: https://example.com/aopolo.jpg
+        product_description:
+          type: string
+          example: Áo polo vải cotton mềm mại.
+        product_price:
+          type: number
+          example: 300000
+        product_quantity:
+          type: number
+          example: 50
+        product_type:
+          type: string
+          enum:
+            - Clothing
+            - Electronic
+            - Furniture
+          example: Clothing
+        product_shop:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        product_attributes:
+          type: object
+          properties:
+            brand:
+              type: string
+              example: Lacoste
+            size:
+              type: string
+              example: M
+            material:
+              type: string
+              example: Cotton
+    ProductUpdateRequest:
+      type: object
+      properties:
+        product_name:
+          type: string
+          example: "update-product"
+        product_thumb:
+          type: string
+          example: "update-product"
+        product_description:
+          type: string
+          example: "update-product"
+        product_price:
+          type: number
+          example: 123
+        product_quantity:
+          type: number
+          example: 123
+        product_type:
+          type: string
+          example: "Clothing"
+          enum:
+            - Clothing
+            - Electronic
+            - Furniture
+        product_attributes:
+          type: object
+          properties:
+            brand:
+              type: string
+              example: "update-product"
+            size:
+              type: string
+              example: "update-product"
+            material:
+              type: string
+              example: "update-product"
+        product_ratingAverage:
+          type: number
+        product_variants:
+          type: array
+          items:
+            type: object
+        isDraft:
+          type: boolean
+        isPublished:
+          type: boolean
+    ProductResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: 67ae273bd253cc6a1b7b1c9b
+        product_name:
+          type: string
+          example: Áo Polo
+        product_thumb:
+          type: string
+          example: https://example.com/aopolo.jpg
+        product_description:
+          type: string
+          example: Áo polo vải cotton mềm mại.
+        product_price:
+          type: number
+          example: 300000
+        product_quantity:
+          type: number
+          example: 50
+        product_type:
+          type: string
+          example: Clothing
+        product_shop:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        product_attributes:
+          type: object
+          properties:
+            brand:
+              type: string
+              example: Lacoste
+            size:
+              type: string
+              example: M
+            material:
+              type: string
+              example: Cotton
+
+    # Discount Schemas
+    DiscountCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - type
+        - value
+        - discount_code
+        - start_date
+        - end_date
+        - max_uses
+        - shopId
+      properties:
+        name:
+          type: string
+          example: Mừng Sinh Nhật
+        description:
+          type: string
+          example: Giảm giá 20% nhân dịp sinh nhật cửa hàng.
+        type:
+          type: string
+          enum:
+            - percentage
+            - fixed_amount
+          example: percentage
+        value:
+          type: number
+          example: 10
+        discount_code:
+          type: string
+          example: BIRTHDAY22
+        start_date:
+          type: string
+          format: date-time
+          example: 2025-02-01T09:00:00Z
+        end_date:
+          type: string
+          format: date-time
+          example: 2025-02-28T09:00:00Z
+        max_uses:
+          type: integer
+          example: 100
+        uses_count:
+          type: integer
+          example: 0
+        users_used:
+          type: array
+          items:
+            type: string
+          example: []
+        max_uses_per_user:
+          type: integer
+          example: 1
+        min_order_value:
+          type: number
+          example: 200000
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        product_id:
+          type: array
+          items:
+            type: string
+          example: ["67ae273bd253cc6a1b7b1c9b", "67aee39708978564b2cb2bfa"]
+        is_active:
+          type: boolean
+          example: true
+        applies_to:
+          type: string
+          example: all
+        max_value:
+          type: number
+          nullable: true
+          example: null
+    DiscountUpdateRequest:
+      type: object
+      properties:
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        updateData:
+          type: object
+          properties:
+            discount_name:
+              type: string
+              example: Black Friday
+            discount_description:
+              type: string
+              example: Black Friday tưng bừng giảm giá
+            discount_value:
+              type: number
+              example: 15
+            discount_code:
+              type: string
+              example: BLACKFRIDAY19-11
+            discount_start_date:
+              type: string
+              format: date-time
+              example: 2025-02-02T02:00:00Z
+            discount_end_date:
+              type: string
+              format: date-time
+              example: 2025-02-15T02:00:00Z
+    DiscountResponse:
+      type: object
+      properties:
+        discountId:
+          type: string
+          example: 67b0b1043dcf758bf53de95d
+        name:
+          type: string
+          example: Mừng Sinh Nhật
+        description:
+          type: string
+          example: Giảm giá 20% nhân dịp sinh nhật cửa hàng.
+        type:
+          type: string
+          example: percentage
+        value:
+          type: number
+          example: 10
+        discount_code:
+          type: string
+          example: BIRTHDAY22
+        start_date:
+          type: string
+          format: date-time
+          example: 2025-02-01T09:00:00Z
+        end_date:
+          type: string
+          format: date-time
+          example: 2025-02-28T09:00:00Z
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+    DiscountAmountRequest:
+      type: object
+      required:
+        - codeId
+        - shopId
+        - products
+      properties:
+        codeId:
+          type: string
+          example: BLACKFRIDAY19-11
+        shopId:
+          type: string
+          example: 67a1bc650682ba58d66bbdbb
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: 67ae273bd253cc6a1b7b1c9b
+              quantity:
+                type: integer
+                example: 5
+              price:
+                type: number
+                example: 100000
+
+    
+  securitySchemes:
+    # ApiKey:
+    #   type: apiKey
+    #   in: header
+    #   name: x-api-key
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ClientId:
+      type: apiKey
+      in: header
+      name: x-client-id
+    RefreshToken:
+      type: apiKey
+      in: header
+      name: x-rtoken-id
+    

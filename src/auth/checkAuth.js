@@ -17,7 +17,7 @@ const apiKey = async (req, res, next) => {
     console.log("req.headers ben checkAuth",req.headers)
     try {
         const key = req.headers[HEADER.API_KEY]?.toString();
-        console.log("key",key)
+        console.log("APIkey ben checkAuth",key)
         if (!key) {
             return res.status(403).json({
                 message: "Forbidden Error (API key is missing)",

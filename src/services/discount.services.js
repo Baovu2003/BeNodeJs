@@ -176,6 +176,9 @@ class DiscountService {
     }
 
     static async getAllDiscountCodeByShop({ limit, page, shopId }) {
+        console.log(">>> shopId trước khi convert:", shopId);
+console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
+
         const discounts = await fillAllDiscountCodeUnselect({
             limit: +limit,
             page: +page,

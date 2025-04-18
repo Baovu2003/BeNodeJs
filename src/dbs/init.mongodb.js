@@ -29,7 +29,7 @@ class Database {
         maxPoolSize: 50, // Giới hạn tối đa 50 kết nối trong connection pool
       })
       .then((_) => console.log("Connect Success ")) 
-      .catch((err) => console.log("Connect Error")); // Ghi lỗi nếu kết nối thất bại
+      .catch((err) => console.log("Connect Error",err)); // Ghi lỗi nếu kết nối thất bại
   }
 
   static getInstance() {

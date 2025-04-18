@@ -25,7 +25,6 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
         })
 
         //
-
         JWT.verify( accessToken, publicKey, (err, decode) => {
             if(err){
                 console.error(`error verify::`, err)
@@ -41,48 +40,8 @@ const createTokenPair = async ( payload, publicKey, privateKey ) => {
     }
 }
 
-const authentication = asyncHandler(async (req, res,next) => {
-    console.log(req.headers)
-    /*
-        1 - Check userId missing ???
-        2 - get access token
-        3 - verify token
-        4 - check user trong db co correct khong
-        5 - check keyStore with this userId
-        6 - return next
-    */
-        //1
-        const userId = req.headers[HEADER.CLIENT_ID];
-        console.log({userId})
-        if(!userId)  throw new AuthFailureError("Invalid request") ;
-
-        //2
-        const keyStore = await findByUserId({userId});
-        console.log("KeyStore ", keyStore);
-        if(!keyStore) throw new NotFoundError("Invalid request") ;
-
-        //3
-        const accessToken =  req.headers[HEADER.AUTHORIZATION];
-        console.log({accessToken})
-        if(!accessToken) throw new AuthFailureError("Invalid request") ;
-
-        //4
-        console.log("accessToken ", accessToken)
-        console.log("KeyStore Public Key:", keyStore.publicKey);
-        try {
-            const decodeUser = JWT.verify(accessToken,keyStore.publicKey);
-            console.log(`decodeUser verify::`, decodeUser)
-            if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
-            req.keyStore = keyStore;
-            return next();
-        } catch (error) {
-            throw error
-        }
-
-})
-
 const authenticationV2 = asyncHandler(async (req, res,next) => {
-    console.log(req.headers)
+    console.log("req.headers",req.headers)
     /*
         1 - Check userId missing ???
         2 - get access token
@@ -94,14 +53,12 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
         //1
         const userId = req.headers[HEADER.CLIENT_ID];
         console.log("userId in authUtils",userId)
-        if(!userId)  throw new AuthFailureError("Invalid request") ;
+        if(!userId)  throw new AuthFailureError("Unauthorized") ;
 
         //2
         const keyStore = await findByUserId({userId});
         console.log("KeyStore ", keyStore);
-        if(!keyStore) throw new NotFoundError("Invalid request") ;
-
-        
+        if(!keyStore) throw new NotFoundError("Unauthorized") ;
 
         //3
         if(req.headers[HEADER.REFRESHTOKEN]){
@@ -110,7 +67,7 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
 
                 const decodeUser = JWT.verify(refreshToken,keyStore.privateKey);
                 console.log(`decodeUser verify::`, decodeUser)
-                if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
+                if(userId !== decodeUser.userId) throw new AuthFailureError("Unauthorized");
                 req.keyStore = keyStore;
                 req.user = decodeUser;
                 req.refreshToken =refreshToken;
@@ -122,9 +79,9 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
                 throw error
             }
         }
-        const accessToken =  req.headers[HEADER.AUTHORIZATION];
+        const accessToken =  req.headers[HEADER.AUTHORIZATION]?.toString()?.replaceAll('Bearer ', '');
         console.log({accessToken})
-        if(!accessToken) throw new AuthFailureError("Invalid request") ;
+        if(!accessToken) throw new AuthFailureError("Unauthorized") ;
 
         //4
         console.log("accessToken ", accessToken)
@@ -132,7 +89,7 @@ const authenticationV2 = asyncHandler(async (req, res,next) => {
         try {
             const decodeUser = JWT.verify(accessToken,keyStore.publicKey);
             console.log(`decodeUser verify::`, decodeUser)
-            if(userId !== decodeUser.userId) throw new AuthFailureError("Invalid request");
+            if(userId !== decodeUser.userId) throw new AuthFailureError("Unauthorized");
             req.keyStore = keyStore;
             return next();
         } catch (error) {
@@ -146,5 +103,5 @@ const verifyJWT = async (token,kerSecret) => {
 }
 
 module.exports = {
-    createTokenPair,authentication,verifyJWT,authenticationV2
+    createTokenPair,verifyJWT,authenticationV2
 }
