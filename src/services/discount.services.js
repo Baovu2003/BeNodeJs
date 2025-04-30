@@ -193,6 +193,7 @@ console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
     }
 
     static async getDiscountAmount({ codeId, userId, shopId, products }) {
+        console.log("codeId", codeId, "userId", userId, "shopId", shopId, "products", products)
         const foundDiscount = await checkDiscountExists({
             model: discountModel,
             filter: {
@@ -200,6 +201,7 @@ console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
                 discount_shopId: convetToObjectId(shopId),
             },
         });
+        console.log("foundDiscount", foundDiscount)
         if (!foundDiscount) throw new NotFoundError("Discount not exist");
         const {
             discount_is_active,
@@ -219,7 +221,7 @@ console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
             totalOrder = products.reduce((acc, product) => {
                 return acc + (product.quantity * product.price);
             }, 0);
-            console.log(totalOrder)
+            console.log("totalOrder",totalOrder)
             if (totalOrder < discount_min_order_value) {
                 throw new NotFoundError(
                     "discount require a minimum of " + discount_min_order_value
@@ -231,12 +233,14 @@ console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
             const userUserDiscount = discount_users_used.find(
                 (user) => user.userId === userId
             );
+            console.log("userUserDiscount", userUserDiscount)
             if (userUserDiscount) {
             }
         }
         let amount = 0;
         if (discount_end_date && new Date(discount_end_date) < new Date()) {
             amount = 0
+            throw new NotFoundError("Discount Expired");
         } else {
               // Tính toán giảm giá nếu phiếu vẫn còn hiệu lực
             // check xem discount laf "fix-amount" hay "specific"
@@ -244,6 +248,12 @@ console.log(">>> shopId sau khi convert:", convetToObjectId(shopId));
                 ? discount_value
                 : totalOrder * (discount_value / 100);
         }
+        console.log({
+            totalOrder,
+            discount: amount,
+            totalPrice: totalOrder - amount,
+            annouce:"Discount is exist from to "+discount_end_date
+        })
         return {
             totalOrder,
             discount: amount,

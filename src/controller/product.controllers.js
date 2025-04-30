@@ -104,6 +104,16 @@ class ProductController {
       }),
     }).send(res);
   };
+
+  findProductByShopId = async (req, res, next) => {
+    console.log("req.body ben product-controller", req.body);
+     new SuccessResponse({
+      message: "get Productby ShopId success",
+      metadata: await ProductServiceV2.findProductByShopId({
+        product_shop: req.params.product_shop,
+      }),
+    }).send(res);
+  };
 }
 
 module.exports = new ProductController();

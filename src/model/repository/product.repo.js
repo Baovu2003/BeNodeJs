@@ -100,6 +100,16 @@ const findProductDetail = async ({ product_id, unSelect }) => {
     .lean();
 };
 
+const findProductByShopId = async ({ product_shop, unSelect }) => {
+  return await product
+    .find({product_shop:product_shop})
+    .populate({
+      path: "product_shop",
+      select: "name _id",
+    })
+    .select(unGetSelectData(unSelect))
+    .lean();
+};
 const updateProductById = async (
   { productId, bodyUpdate, model },
   isNew = true
@@ -125,6 +135,24 @@ const getProductById = async (productId) => {
   return await product.findById({_id: convetToObjectId(productId)}).lean();
 };
 
+const checkProductByServer = async (products) =>{
+  console.log("products", products)
+
+  return await Promise.all((products.map(async product =>{
+    const foundProduct = await getProductById(product.productId);
+    console.log("foundProduct", foundProduct)
+    if(foundProduct){
+      return{
+        price: foundProduct.product_price,
+        quantity: product.quantity,
+        productId: product.productId,
+      }
+    }
+    return foundProduct;
+
+  })))
+}
+
 module.exports = {
   findAllDraftsShopRepo,
   findAllPublishedShopRepo,
@@ -133,6 +161,8 @@ module.exports = {
   searchProducts,
   findAllProducts,
   findProductDetail,
+  findProductByShopId,
   updateProductById,
-  getProductById
+  getProductById,
+  checkProductByServer
 };

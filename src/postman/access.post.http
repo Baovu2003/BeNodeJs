@@ -278,3 +278,45 @@ x-client-id: 67a1bc650682ba58d66bbdbb
   "userId": "1122",
   "productId": "67e1c1d6a3b5cf84edbc2f2b"
 }
+
+
+###
+POST {{url_dev}}checkout/review
+Content-Type: application/json
+x-api-key: 9478fe74dd3bed7c5480e0a0d35abf2a917d18863c2110fbcc90cf0598df129248d79018f331cbad6e3d1aa42318b2f04c873e2f21883e7756f79f2c7cdae21e
+x-client-id: 67a1bc650682ba58d66bbdbb
+
+{
+  "userId": 1001,
+  "shop_order_ids": [
+    {
+      "shopId": "67e18b1995636580d32971d0",
+      "shop_discounts": [],
+      "item_products": [
+        {
+          "price": 300000,
+          "quantity": 2,
+          "productId": "6811c95775194012f65dfff1"
+        }
+      ]
+    },
+    {
+      "shopId": "67e164e506a12789386826cd",
+      "shop_discounts": [
+        {
+          "shop_id": "67e164e506a12789386826cd",
+          "discountId": "6811ca0775194012f65dfffa",
+          "codeId": "BIRTHDAY22"
+        }
+      ],
+      "item_products": [
+        {
+          "price": 300000,
+          "quantity": 5,
+          "productId": "6811c93275194012f65dffe9"
+        }
+      ]
+    }
+  ]
+}
+

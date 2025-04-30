@@ -1,7 +1,7 @@
 "use strict";
 const { product, electronic, clothing, furniture } = require("../model/product.model");
 const { BadRequestError, ForbiddenError } = require("../core/error.response");
-const { findAllDraftsShopRepo, findAllPublishedShopRepo, publisProductByShopRepo, unPublisProductByShopRepo, searchProducts, findAllProducts, findProductDetail, updateProductById } = require("../model/repository/product.repo");
+const { findAllDraftsShopRepo, findAllPublishedShopRepo, publisProductByShopRepo, unPublisProductByShopRepo, searchProducts, findAllProducts, findProductDetail, updateProductById, findProductByShopId } = require("../model/repository/product.repo");
 const { removeUndefineObj, updateNestedObjectParser } = require("../untils");
 const { insertInventory } = require("../model/repository/inventory.repo");
 // define factory class to create product
@@ -69,7 +69,7 @@ class ProductFactory {
         path: "product_shop",
         select: "name _id",
       })
-      // .select("product_name product_price product_thumb")
+      .select("product_name product_price product_quantity product_shop ")
       .sort({ createdAt: sort === "ctime" ? -1 : 1 })
       .limit(limit)
       .lean();
@@ -80,6 +80,10 @@ class ProductFactory {
   }
   static async findProductDetail({ product_id }) {
     return await findProductDetail({ product_id: product_id, unSelect: ['__v', 'product_variations'] })
+  }
+
+  static async findProductByShopId({ product_shop }) {
+    return await findProductByShopId({ product_shop: product_shop, unSelect: ['__v', 'product_variations'] })
   }
 }
 

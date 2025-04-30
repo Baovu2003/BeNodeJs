@@ -200,6 +200,29 @@ paths:
         - ApiKey: []
         - ClientId: []
         - RefreshToken: []
+  /product/productShop/{productShopId}:
+    get:
+      summary: Get a product by ShopID
+      tags:
+        - Product
+      parameters:
+        - name: productShopId  # <== CHỈNH SỬA Ở ĐÂY
+          in: path
+          required: true
+          schema:
+            type: string
+          example: 67e18b1995636580d32971d0
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "404":
+          description: Product not found
+      security:
+        - ApiKey: []
   /product/drafts/all:
     get:
       summary: Get all draft products
